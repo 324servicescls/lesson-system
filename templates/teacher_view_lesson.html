@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lesson Review</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+  <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-secondary mb-3">
+    ← Back to Dashboard
+  </a>
+
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      Lesson Review
+    </div>
+
+    <div class="card-body">
+
+      <p><strong>Subject:</strong> {{ lesson.subject }}</p>
+      <p><strong>Class:</strong> {{ lesson.class_name }}</p>
+      <p><strong>Lesson:</strong> {{ lesson.lesson_title }}</p>
+
+      <hr>
+
+      <p>
+  <strong>Status:</strong>
+
+  {% if lesson.status == 'approved' %}
+    <span class="badge bg-success">Approved</span>
+  {% elif lesson.status == 'rejected' %}
+    <span class="badge bg-danger">Rejected</span>
+  {% else %}
+    <span class="badge bg-warning">Pending</span>
+  {% endif %}
+</p>
+
+      <hr>
+
+      <h5 class="mt-3">Headmaster Feedback</h5>
+
+      {% if lesson.feedback %}
+        <div class="alert alert-info">
+          {{ lesson.feedback }}
+        </div>
+      {% else %}
+        <div class="alert alert-secondary">
+          No feedback yet.
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
