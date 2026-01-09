@@ -20,8 +20,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 # Connect database to app
 db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
