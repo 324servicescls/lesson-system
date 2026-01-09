@@ -68,6 +68,10 @@ class Lesson(db.Model):
     teacher = db.relationship('User', backref='lessons')
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+with app.app_context():
+        db.create_all()
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
