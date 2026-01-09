@@ -13,9 +13,6 @@ import os
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# Secret key (used later for login security)
-app.config['SECRET_KEY'] = 'simple-secret-key'
-
 # Database location
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
