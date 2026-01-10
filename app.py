@@ -5,13 +5,15 @@ from flask import Flask
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect, url_for, request, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
+
+# Secret key (used later for login security)
+app.config['SECRET_KEY'] = 'simple-secret-key'
 
 # Database location
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -86,9 +88,10 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
+        if user and user.password == password:
             session['user_id'] = user.id
             session['role'] = user.role
+            session['name'] = user.name
 
             if user.role == 'headmaster':
                 return redirect(url_for('headmaster_dashboard'))
@@ -376,6 +379,7 @@ def teacher_view_lesson(lesson_id):
         lesson=lesson
     )
 
+
 # --------------------
 # CREATE DATABASE
 # --------------------
@@ -384,24 +388,3 @@ if __name__ == '__main__':
         print("Creating database tables...")
         db.create_all()
     app.run()
-
-
-from werkzeug.security import generate_password_hash
-
-with app.app_context():
-    db.create_all()
-
-    admin_email = "admin@example.com"
-    admin_password = "admin1234"
-
-    admin = User.query.filter_by(email=admin_email).first()
-    if not admin:
-        admin = User(
-            email=admin_email,
-            password=generate_password_hash(admin_password)
-        )
-        db.session.add(admin)
-        db.session.commit()
-        print("✅ Admin user created on startup")
-    else:
-        print("ℹ️ Admin user already exists")
