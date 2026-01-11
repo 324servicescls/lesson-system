@@ -67,6 +67,8 @@ class Lesson(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     teacher = db.relationship('User', backref='lessons')
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    with app.app_context():
+    db.create_all()
 
 
 @login_manager.user_loader
