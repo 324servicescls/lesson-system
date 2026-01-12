@@ -18,19 +18,19 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            table-layout: fixed; /* forces consistent column widths */
+            table-layout: fixed; /* consistent column widths */
         }
 
         th, td {
             border: 1px solid #000;
             padding: 5px;
             vertical-align: top;
-            word-wrap: break-word; /* ensures long text wraps */
+            word-wrap: break-word; /* wraps long text */
         }
 
         th {
             background-color: #f0f0f0;
-            width: 30%; /* better balance for 2-column tables */
+            width: 30%;
             text-align: left;
         }
 
@@ -44,7 +44,6 @@
             text-align: center;
         }
 
-        /* Optional: reduce height of large empty cells */
         .spacer {
             height: 80px;
         }
@@ -67,6 +66,10 @@
     <tr>
         <th>Class</th>
         <td>{{ lesson.class_name }}</td>
+    </tr>
+    <tr>
+        <th>Lesson Date</th>
+        <td>{{ lesson.lesson_date.strftime('%d %b %Y') if lesson.lesson_date else "" }}</td>
     </tr>
     <tr>
         <th>Week Ending</th>

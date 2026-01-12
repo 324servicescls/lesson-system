@@ -11,10 +11,12 @@
 
     <div class="card-body">
 
+        <!-- BASIC INFO -->
         <div class="row mb-3">
-            <div class="col-md-4"><strong>Subject:</strong> {{ lesson.subject }}</div>
-            <div class="col-md-4"><strong>Class:</strong> {{ lesson.class_name }}</div>
-            <div class="col-md-4"><strong>Week Ending:</strong> {{ lesson.week_ending }}</div>
+            <div class="col-md-3"><strong>Subject:</strong> {{ lesson.subject }}</div>
+            <div class="col-md-3"><strong>Class:</strong> {{ lesson.class_name }}</div>
+            <div class="col-md-3"><strong>Week Ending:</strong> {{ lesson.week_ending }}</div>
+            <div class="col-md-3"><strong>Lesson Date:</strong> {{ lesson.lesson_date.strftime('%d %b %Y') }}</div>
         </div>
 
         <div class="row mb-3">
@@ -25,6 +27,7 @@
 
         <hr>
 
+        <!-- CURRICULUM INFORMATION -->
         <h6>Curriculum Information</h6>
         <p><strong>Strand:</strong> {{ lesson.strand }}</p>
         <p><strong>Sub Strand:</strong> {{ lesson.sub_strand }}</p>
@@ -34,6 +37,7 @@
 
         <hr>
 
+        <!-- TEACHING & LEARNING RESOURCES -->
         <h6>Teaching & Learning Resources</h6>
         <p><strong>Core Competencies:</strong> {{ lesson.core_competencies }}</p>
         <p><strong>Keywords:</strong> {{ lesson.keywords }}</p>
@@ -42,6 +46,7 @@
 
         <hr>
 
+        <!-- LESSON PHASES -->
         <h6>Lesson Phases</h6>
 
         <div class="mb-3">

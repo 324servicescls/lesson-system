@@ -8,6 +8,8 @@ from io import BytesIO
 from xhtml2pdf import pisa
 from io import BytesIO
 from flask import make_response, render_template
+from datetime import date
+from datetime import date, datetime
 import os
 
 # --------------------
@@ -45,6 +47,7 @@ class Lesson(db.Model):
     sub_strand = db.Column(db.String(200))
     indicator_code = db.Column(db.String(100))
     content_standard_code = db.Column(db.String(100))
+    lesson_date = db.Column(db.Date, nullable=False, default=date.today)  # already there
     performance_indicator = db.Column(db.Text)
     core_competencies = db.Column(db.Text)
     keywords = db.Column(db.Text)
@@ -57,6 +60,7 @@ class Lesson(db.Model):
     feedback = db.Column(db.Text)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     teacher = db.relationship('User', backref='lessons')
+    approval_date = db.Column(db.Date, nullable=True)  # <-- new field for headmaster approval
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
 # --------------------
@@ -247,6 +251,7 @@ def teacher_dashboard():
     if request.method == 'POST':
         lesson = Lesson(
             subject=request.form['subject'],
+            lesson_date=date.fromisoformat(request.form['lesson_date']),
             class_name=request.form['class_name'],
             week_ending=request.form['week_ending'],
             class_size=request.form['class_size'],
@@ -274,9 +279,19 @@ def teacher_dashboard():
         return redirect(url_for('teacher_dashboard'))
 
     lessons = Lesson.query.filter_by(teacher_id=int(session['user_id'])).all()
-    submitted_lessons = Lesson.query.filter(Lesson.teacher_id == session['user_id'], Lesson.status != 'pending').all()
+    submitted_lessons = Lesson.query.filter(
+        Lesson.teacher_id == session['user_id'],
+        Lesson.status != 'pending'
+    ).all()
 
-    return render_template('teacher.html', teacher_name=session['name'], lessons=lessons, submitted_lessons=submitted_lessons)
+    return render_template(
+        'teacher.html',
+        teacher_name=session['name'],
+        lessons=lessons,
+        submitted_lessons=submitted_lessons,
+        today=date.today()  # ✅ Pass today to template
+    )
+
 
 @app.route('/submit-lesson/<int:lesson_id>', methods=['POST'])
 def submit_lesson(lesson_id):
