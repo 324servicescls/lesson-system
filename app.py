@@ -3,8 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from datetime import datetime
 from flask import make_response
-from weasyprint import HTML
 from flask import send_file
+from xhtml2pdf import pisa
+from io import BytesIO
 import os
 
 # --------------------
@@ -221,20 +222,19 @@ def edit_lesson(lesson_id):
 def export_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
 
-    # Render HTML template for PDF
     html = render_template('lesson_pdf.html', lesson=lesson)
 
-    # Generate PDF using WeasyPrint
-    pdf_file_path = f'lesson_{lesson.id}.pdf'
-    HTML(string=html).write_pdf(pdf_file_path)
+    result = BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=result)
 
-    # Force download instead of inline view
-    return send_file(
-        pdf_file_path,
-        mimetype='application/pdf',
-        as_attachment=True,
-        download_name=f'lesson_{lesson.id}.pdf'  # This is the downloaded filename
-    )
+    if pisa_status.err:
+        return "Error generating PDF", 500
+
+    response = make_response(result.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=lesson_{lesson.id}.pdf'
+
+    return response
 
 
 @app.route('/teacher', methods=['GET', 'POST'])
