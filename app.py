@@ -6,6 +6,9 @@ from flask import make_response
 from flask import send_file
 from weasyprint import HTML
 from io import BytesIO
+from xhtml2pdf import pisa
+from io import BytesIO
+from flask import make_response, render_template
 import os
 
 # --------------------
