@@ -2,6 +2,9 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from datetime import datetime
+from flask import make_response
+from weasyprint import HTML
+from flask import send_file
 import os
 
 # --------------------
@@ -214,6 +217,26 @@ def edit_lesson(lesson_id):
 
     return render_template('edit_lesson.html', lesson=lesson)
 
+@app.route('/lesson/<int:lesson_id>/export')
+def export_lesson(lesson_id):
+    lesson = Lesson.query.get_or_404(lesson_id)
+
+    # Render HTML template for PDF
+    html = render_template('lesson_pdf.html', lesson=lesson)
+
+    # Generate PDF using WeasyPrint
+    pdf_file_path = f'lesson_{lesson.id}.pdf'
+    HTML(string=html).write_pdf(pdf_file_path)
+
+    # Force download instead of inline view
+    return send_file(
+        pdf_file_path,
+        mimetype='application/pdf',
+        as_attachment=True,
+        download_name=f'lesson_{lesson.id}.pdf'  # This is the downloaded filename
+    )
+
+
 @app.route('/teacher', methods=['GET', 'POST'])
 def teacher_dashboard():
     if 'user_id' not in session or session['role'] != 'teacher':
@@ -343,4 +366,4 @@ with app.app_context():
 # RUN APP
 # --------------------
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

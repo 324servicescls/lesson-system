@@ -20,7 +20,7 @@
            class="btn btn-outline-secondary btn-sm me-2">
             Change Password
         </a>
-
+        
         <a href="{{ url_for('logout') }}"
            class="btn btn-danger btn-sm">
             Logout
@@ -79,7 +79,7 @@
 <div class="row">
   <div class="col-md-4 mb-3">
     <label>Week Ending</label>
-    <input type="text" name="week_ending" class="form-control">
+    <input type="date" name="week_ending" class="form-control" required>
   </div>
 
   <div class="col-md-4 mb-3">
@@ -89,7 +89,14 @@
 
   <div class="col-md-4 mb-3">
     <label>Day</label>
-    <input type="text" name="day" class="form-control">
+    <select name="day" class="form-control" required>
+    <option value="">-- Select Day --</option>
+    <option value="Monday">Monday</option>
+    <option value="Tuesday">Tuesday</option>
+    <option value="Wednesday">Wednesday</option>
+    <option value="Thursday">Thursday</option>
+    <option value="Friday">Friday</option>
+</select>
   </div>
 </div>
 
@@ -213,6 +220,9 @@
     <a href="{{ url_for('teacher_view_lesson', lesson_id=lesson.id) }}"
    class="btn btn-sm btn-info mt-1">
   View
+</a>
+<a href="{{ url_for('export_lesson', lesson_id=lesson.id) }}" target="_blank" class="btn btn-primary">
+    Export PDF
 </a>
 
     <form method="POST"

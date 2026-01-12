@@ -122,6 +122,9 @@
       <a href="{{ url_for('headmaster_view_lesson', lesson_id=lesson.id) }}"
          class="btn btn-sm btn-outline-primary">
         Review
+        <a href="{{ url_for('export_lesson', lesson_id=lesson.id) }}" target="_blank" class="btn btn-primary">
+    Export PDF
+</a>
       </a>
     </td>
   </tr>
